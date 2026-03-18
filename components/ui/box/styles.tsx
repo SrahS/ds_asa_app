@@ -1,0 +1,82 @@
+import { tva } from '@gluestack-ui/nativewind-utils/tva';
+
+export const boxStyle = tva({
+  base: 'bg-background',
+
+  variants: {
+    variant: {
+      // Fundos
+      default: 'bg-background',
+      foreground: 'bg-foreground',
+      muted: 'bg-forms-background',
+      primary: 'bg-primary',
+      secondary: 'bg-secondary',
+      error: 'bg-error',
+      success: 'bg-success',
+      warning: 'bg-warning',
+
+      // Com borda
+      outlined: 'bg-background border border-border rounded-lg',
+      card: 'bg-foreground border border-border rounded-2xl',
+
+      // Com sombra (usando classes customizadas definidas no tailwind.config)
+      elevated: 'bg-background rounded-2xl shadow-soft',
+      elevatedHard: 'bg-background rounded-2xl shadow-hard',
+    },
+
+    padding: {
+      none: 'p-0',
+      xs: 'p-1',
+      sm: 'p-2',
+      md: 'p-4',
+      lg: 'p-6',
+      xl: 'p-8',
+    },
+
+    rounded: {
+      none: 'rounded-none',
+      sm: 'rounded-sm',
+      md: 'rounded-md',
+      lg: 'rounded-lg',
+      xl: 'rounded-xl',
+      '2xl': 'rounded-2xl',
+      full: 'rounded-full',
+    },
+
+    flex: {
+      row: 'flex-row',
+      col: 'flex-col',
+      rowReverse: 'flex-row-reverse',
+      colReverse: 'flex-col-reverse',
+    },
+
+    align: {
+      start: 'items-start',
+      center: 'items-center',
+      end: 'items-end',
+      stretch: 'items-stretch',
+    },
+
+    justify: {
+      start: 'justify-start',
+      center: 'justify-center',
+      end: 'justify-end',
+      between: 'justify-between',
+      around: 'justify-around',
+      evenly: 'justify-evenly',
+    },
+
+    gap: {
+      none: 'gap-0',
+      xs: 'gap-1',
+      sm: 'gap-2',
+      md: 'gap-4',
+      lg: 'gap-6',
+      xl: 'gap-8',
+    },
+  },
+
+  defaultVariants: {
+    variant: 'default',
+  },
+});

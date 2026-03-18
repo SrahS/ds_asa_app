@@ -1,0 +1,71 @@
+diff --git a/node_modules/react-native-css-interop/dist/runtime/third-party-libs/react-native-safe-area-context.native.js b/node_modules/react-native-css-interop/dist/runtime/third-party-libs/react-native-safe-area-context.native.js
+index ee4b7a7..2bdd252 100644
+--- a/node_modules/react-native-css-interop/dist/runtime/third-party-libs/react-native-safe-area-context.native.js
++++ b/node_modules/react-native-css-interop/dist/runtime/third-party-libs/react-native-safe-area-context.native.js
+@@ -1,45 +1,24 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.maybeHijackSafeAreaProvider = maybeHijackSafeAreaProvider;
+-const react_1 = require("react");
+-const react_native_1 = require("react-native");
+-const styles_1 = require("../native/styles");
+-let safeAreaProviderShim;
+-function maybeHijackSafeAreaProvider(type) {
+-    const name = type.displayName || type.name;
+-    if (react_native_1.Platform.OS !== "web" && name === "SafeAreaProvider") {
+-        safeAreaProviderShim ||= shimFactory(type);
+-        type = safeAreaProviderShim;
+-    }
+-    return type;
++exports.SafeAreaProviderShim = SafeAreaProviderShim;
++
++function maybeHijackSafeAreaProvider(component) {
++  return component;
+ }
+-function shimFactory(type) {
+-    function SafeAreaEnv({ children }) {
+-        try {
+-            const { useSafeAreaInsets, SafeAreaProvider, } = require("react-native-safe-area-context");
+-            if (type !== SafeAreaProvider) {
+-                return (0, react_1.createElement)(react_1.Fragment, {}, children);
+-            }
+-            const insets = useSafeAreaInsets();
+-            const parentVarContext = (0, react_1.useContext)(styles_1.VariableContext);
+-            const parentVars = parentVarContext instanceof Map
+-                ? Object.fromEntries(parentVarContext.entries())
+-                : parentVarContext;
+-            const value = (0, react_1.useMemo)(() => ({
+-                ...parentVars,
+-                "--___css-interop___safe-area-inset-bottom": insets.bottom,
+-                "--___css-interop___safe-area-inset-left": insets.left,
+-                "--___css-interop___safe-area-inset-right": insets.right,
+-                "--___css-interop___safe-area-inset-top": insets.top,
+-            }), [parentVarContext, insets]);
+-            return (0, react_1.createElement)(styles_1.VariableContext.Provider, { value }, children);
+-        }
+-        catch {
+-            return (0, react_1.createElement)(react_1.Fragment, {}, children);
+-        }
+-    }
+-    return function SafeAreaProviderShim({ children, ...props }) {
+-        return (0, react_1.createElement)(type, props, (0, react_1.createElement)(SafeAreaEnv, {}, children));
+-    };
++
++function SafeAreaProviderShim({ children }) {
++  let SafeAreaLibrary;
++  try {
++    SafeAreaLibrary = require("react-native-safe-area-context");
++  } catch {}
++
++  if (SafeAreaLibrary?.SafeAreaProvider) {
++    return require("react").createElement(
++      SafeAreaLibrary.SafeAreaProvider,
++      null,
++      children
++    );
++  }
++  return children;
+ }
+\ No newline at end of file
+-//# sourceMappingURL=react-native-safe-area-context.native.js.map
+\ No newline at end of file

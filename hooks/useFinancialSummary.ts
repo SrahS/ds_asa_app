@@ -1,0 +1,29 @@
+import { useMemo } from "react";
+import { useTransactions } from "./useTransactions";
+
+export function useFinancialSummary() {
+  const { transactions } = useTransactions();
+
+  const summary = useMemo(() => {
+    const income = transactions
+      .filter((t) => t.type === "income")
+      .reduce((acc, t) => acc + t.amount, 0);
+
+    const expense = transactions
+      .filter((t) => t.type === "expense")
+      .reduce((acc, t) => acc + t.amount, 0);
+
+    return {
+      totalBalance: income - expense,
+      income,
+      expense,
+      // Dados formatados para o gráfico de pizza (Donut)
+      chartData: [
+        { value: income, color: "#22c55e", text: "Entradas" },
+        { value: expense, color: "#ef4444", text: "Saídas" },
+      ],
+    };
+  }, [transactions]);
+
+  return summary;
+}
