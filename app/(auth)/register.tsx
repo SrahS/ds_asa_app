@@ -9,12 +9,14 @@ import theme from "@/utils/theme";
 import { Eye, EyeOff, Lock, Mail, User, ArrowLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
   View,
 } from "react-native";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ export default function RegisterScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const router = useRouter();
+  const { signUp } = useAuth();
 
   const passwordMatch = confirmPassword === "" || password === confirmPassword;
   const isValid = name && email && password && confirmPassword && passwordMatch;
@@ -32,9 +35,9 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     try {
       setLoading(true);
-      // await signUp(name, email, password);
-    } catch (error) {
-      // tratado no contexto
+      await signUp(email, password, name);
+    } catch (error: any) {
+      Alert.alert("Erro", error.message);
     } finally {
       setLoading(false);
     }

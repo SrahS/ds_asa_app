@@ -1,11 +1,9 @@
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import "@/global.css";
 import { Slot, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import theme from "@/utils/theme";
 
 function RootLayoutNav() {
   const { user, loading } = useAuth();
@@ -14,24 +12,14 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (loading) return;
-
-    const inTabsGroup = segments[0] === "(tabs)";
     const inAuthGroup = segments[0] === "(auth)";
 
-    if (!user && inTabsGroup) {
+    if (!user && !inAuthGroup) {
       router.replace("/(auth)/login");
-    } else if (user && (inAuthGroup || segments.length === 0)) {
+    } else if (user && inAuthGroup) {
       router.replace("/(tabs)");
     }
   }, [user, loading, segments]);
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.background }}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
 
   return <Slot />;
 }
@@ -39,7 +27,7 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <GluestackUIProvider mode="light">
+      <GluestackUIProvider>
         <AuthProvider>
           <RootLayoutNav />
         </AuthProvider>

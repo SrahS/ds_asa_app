@@ -23,13 +23,28 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useAuth();
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Preencha todos os campos.");
+      return;
+    }
     try {
+      setError("");
       setLoading(true);
       await signIn(email, password);
-    } catch (error) {
-      // tratado no contexto
+      // Não precisa de router.replace aqui —
+      // o onAuthStateChanged dispara → _layout.tsx detecta user → redireciona
+    } catch (e: any) {
+      const messages: Record<string, string> = {
+        "auth/invalid-credential": "E-mail ou senha incorretos.",
+        "auth/user-not-found": "Usuário não encontrado.",
+        "auth/wrong-password": "Senha incorreta.",
+        "auth/too-many-requests": "Muitas tentativas. Tente mais tarde.",
+        "auth/network-request-failed": "Sem conexão com a internet.",
+      };
+      setError(messages[e.code] ?? "Erro ao entrar. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -194,17 +209,30 @@ export default function LoginScreen() {
             ) : (
               <ButtonText
                 bold
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 16,
-                  letterSpacing: 0.4,
-                  textAlign: "center",
-                }}
+                style={{ color: "#FFFFFF", fontSize: 16, letterSpacing: 0.4, textAlign: "center" }}
               >
                 Entrar
               </ButtonText>
             )}
           </Button>
+
+          {error !== "" && (
+            <View
+              style={{
+                marginTop: 12,
+                backgroundColor: `${theme.colors.error}12`,
+                borderRadius: 10,
+                paddingHorizontal: 14,
+                paddingVertical: 10,
+                borderWidth: 1,
+                borderColor: `${theme.colors.error}30`,
+              }}
+            >
+              <Text size="sm" style={{ color: theme.colors.error, textAlign: "center" }}>
+                {error}
+              </Text>
+            </View>
+          )}
 
           {/* Esqueceu a senha */}
           <View style={{ alignItems: "center", marginTop: 20 }}>
