@@ -16,6 +16,7 @@ import { CATEGORY_LABELS } from "@/types/transaction";
 import { useAuth } from "@/contexts/AuthContext";
 import theme from "@/utils/theme";
 import { TrendingUp, TrendingDown, Wallet, ChevronRight } from "lucide-react-native";
+import { seedUserData } from "@/services/transactionService";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CHART_WIDTH = SCREEN_WIDTH - 56;
@@ -178,6 +179,13 @@ export default function DashboardScreen() {
   const sectionAnim = useRef(new Animated.Value(0)).current;
   const prevSection = useRef<Section>("Resumo");
 
+  const handleSeed = async () => {
+    if (user?.uid) {
+      await seedUserData(user.uid);
+      refetch();
+    }
+  };
+
   const switchSection = useCallback(
     (section: Section) => {
       if (section === activeSection) return;
@@ -263,7 +271,7 @@ export default function DashboardScreen() {
         <HStack style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
           <VStack style={{ gap: 2 }}>
             <Text style={{ fontSize: 13, color: theme.colors.secondaryText }}>
-              Olá, {user?.displayName?.split(" ")[0] ?? "usuário"} 👋
+              Olá, {user?.displayName?.split(" ")[0] ?? "usuário"}
             </Text>
             <Text bold style={{ fontSize: 22, color: theme.colors.primaryText, letterSpacing: -0.5 }}>
               Dashboard
@@ -547,6 +555,9 @@ export default function DashboardScreen() {
 
         </Animated.View>
       </View>
+      {/* <Pressable onPress={handleSeed} style={{ padding: 10, backgroundColor: 'blue' }}>
+        <Text style={{ color: 'white' }}>GERAR DADOS DE TESTE (BRL)</Text>
+      </Pressable> */}
     </ScrollView>
   );
 }

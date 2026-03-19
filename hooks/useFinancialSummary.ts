@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useTransactions } from "./useTransactions";
+import { useTransactionList } from "./useTransactions";
 
 export function useFinancialSummary() {
-  const { transactions } = useTransactions();
+  const { transactions } = useTransactionList();
 
   const summary = useMemo(() => {
     const income = transactions
