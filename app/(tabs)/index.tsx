@@ -564,9 +564,9 @@ export default function DashboardScreen() {
 
         </Animated.View>
       </View>
-      <Pressable onPress={handleSeed} style={{ padding: 10, backgroundColor: 'blue' }}>
+      {/* <Pressable onPress={handleSeed} style={{ padding: 10, backgroundColor: 'blue' }}>
         <Text style={{ color: 'white' }}>GERAR DADOS DE TESTE</Text>
-      </Pressable>
+      </Pressable> */}
     </ScrollView>
   );
 }

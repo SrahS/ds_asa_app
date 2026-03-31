@@ -6,7 +6,8 @@ import {
   TextInput,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
@@ -17,19 +18,19 @@ import { addTransaction } from "@/services/transactionService";
 import { useAuth } from "@/contexts/AuthContext";
 import theme from "@/utils/theme";
 import { useRouter } from "expo-router";
-import { X, Calendar as CalendarIcon, Check } from "lucide-react-native";
+import { X, Check, Camera, Image as ImageIcon, Trash2 } from "lucide-react-native";
+import { useUploadReceipt } from "@/hooks/useUploadReceipt";
 
 export default function NewTransactionScreen() {
   const { user } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { pickImage, uploading, receiptUrl, setReceiptUrl } = useUploadReceipt();
 
-  // Estados do Formulário
+  const [loading, setLoading] = useState(false);
   const [type, setType] = useState<"income" | "expense">("expense");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<TransactionCategory>("food");
-  const [date] = useState(new Date().toISOString().split("T")[0]);
 
   const handleSave = async () => {
     if (!amount || !description || !user?.uid) return;
@@ -41,11 +42,12 @@ export default function NewTransactionScreen() {
         amount: parseFloat(amount.replace(",", ".")),
         type,
         category,
-        date,
+        date: new Date().toISOString().split("T")[0],
+        receiptUrl: receiptUrl,
       });
-      router.back(); // Volta para a tela anterior após salvar
+      router.back();
     } catch (error) {
-      console.error("Erro ao salvar transação:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -56,9 +58,8 @@ export default function NewTransactionScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
 
-        {/* Header com botão fechar */}
         <HStack style={styles.header}>
           <Pressable onPress={() => router.back()} hitSlop={20}>
             <X size={24} color={theme.colors.primaryText} />
@@ -69,7 +70,6 @@ export default function NewTransactionScreen() {
 
         <View style={{ paddingHorizontal: 24, paddingTop: 20 }}>
 
-          {/* Seletor de Tipo (Receita/Despesa) */}
           <HStack style={styles.typeSelector}>
             <Pressable
               onPress={() => setType("expense")}
@@ -85,9 +85,8 @@ export default function NewTransactionScreen() {
             </Pressable>
           </HStack>
 
-          {/* Valor Principal */}
           <VStack style={{ alignItems: 'center', marginVertical: 40 }}>
-            <Text size="sm" bold style={{ color: theme.colors.secondaryText, marginBottom: 8 }}>VALOR EM REAIS</Text>
+            <Text size="xs" bold style={{ color: theme.colors.secondaryText, marginBottom: 8 }}>VALOR EM REAIS</Text>
             <HStack style={{ alignItems: 'center' }}>
               <Text bold style={{ fontSize: 32, color: theme.colors.primaryText, marginRight: 8 }}>R$</Text>
               <TextInput
@@ -102,19 +101,17 @@ export default function NewTransactionScreen() {
             </HStack>
           </VStack>
 
-          {/* Descrição */}
           <VStack style={{ gap: 8, marginBottom: 32 }}>
             <Text size="xs" bold style={{ color: theme.colors.secondaryText }}>DESCRIÇÃO</Text>
             <TextInput
               style={styles.descriptionInput}
-              placeholder="Ex: Aluguel, Uber, Salário..."
+              placeholder="Ex: Mercado, Freelance..."
               value={description}
               onChangeText={setDescription}
               placeholderTextColor={theme.colors.secondaryText}
             />
           </VStack>
 
-          {/* Categorias (Chips) */}
           <Text size="xs" bold style={{ color: theme.colors.secondaryText, marginBottom: 16 }}>CATEGORIA</Text>
           <View style={styles.categoryContainer}>
             {Object.keys(CATEGORY_LABELS).map((cat) => {
@@ -130,11 +127,7 @@ export default function NewTransactionScreen() {
                   ]}
                 >
                   {isSelected && <Check size={14} color="#FFF" style={{ marginRight: 4 }} />}
-                  <Text
-                    size="xs"
-                    bold={isSelected}
-                    style={{ color: isSelected ? "#FFF" : theme.colors.secondaryText }}
-                  >
+                  <Text size="xs" bold={isSelected} style={{ color: isSelected ? "#FFF" : theme.colors.secondaryText }}>
                     {CATEGORY_LABELS[cat as TransactionCategory]}
                   </Text>
                 </Pressable>
@@ -142,21 +135,40 @@ export default function NewTransactionScreen() {
             })}
           </View>
 
-          {/* Data Fixa (Simulada) */}
-          <HStack style={styles.dateInfo}>
-            <CalendarIcon size={18} color={theme.colors.secondaryText} />
-            <Text size="sm" style={{ color: theme.colors.secondaryText }}>Hoje, {new Date().toLocaleDateString('pt-BR')}</Text>
-          </HStack>
+          <VStack style={{ gap: 16, marginBottom: 40 }}>
+            <Text size="xs" bold style={{ color: theme.colors.secondaryText }}>COMPROVANTE (OPCIONAL)</Text>
 
-          {/* Botão Salvar */}
+            {receiptUrl ? (
+              <View style={styles.previewContainer}>
+                <Text size="sm" style={{ color: theme.colors.success }}>✓ Recibo anexado</Text>
+                <Pressable onPress={() => setReceiptUrl(null)}>
+                  <Trash2 size={20} color={theme.colors.error} />
+                </Pressable>
+              </View>
+            ) : (
+              <HStack style={{ gap: 12 }}>
+                <Pressable onPress={() => pickImage(true)} style={styles.attachmentBtn} disabled={uploading}>
+                  <Camera size={20} color={theme.colors.primary} />
+                  <Text size="xs" bold style={{ color: theme.colors.primary }}>Câmera</Text>
+                </Pressable>
+
+                <Pressable onPress={() => pickImage(false)} style={styles.attachmentBtn} disabled={uploading}>
+                  <ImageIcon size={20} color={theme.colors.primary} />
+                  <Text size="xs" bold style={{ color: theme.colors.primary }}>Galeria</Text>
+                </Pressable>
+              </HStack>
+            )}
+
+            {uploading && <ActivityIndicator color={theme.colors.primary} />}
+          </VStack>
+
           <Button
             onPress={handleSave}
-            disabled={loading || !amount || !description}
+            disabled={loading || !amount || !description || uploading}
             style={[styles.saveButton, { backgroundColor: type === "expense" ? theme.colors.error : theme.colors.success }]}
           >
             {loading ? <ButtonSpinner color="#FFF" /> : <ButtonText bold style={{ color: "#FFF" }}>Salvar Transação</ButtonText>}
           </Button>
-
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -168,15 +180,10 @@ const styles = StyleSheet.create({
   typeSelector: { backgroundColor: theme.colors.formsBackground, borderRadius: 16, padding: 6, gap: 4 },
   typeBtn: { flex: 1, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   amountInput: { fontSize: 48, fontWeight: '900', color: theme.colors.primaryText, minWidth: 100 },
-  descriptionInput: {
-    fontSize: 16, borderBottomWidth: 1.5, borderBottomColor: theme.colors.border,
-    paddingVertical: 12, color: theme.colors.primaryText
-  },
+  descriptionInput: { fontSize: 16, borderBottomWidth: 1.5, borderBottomColor: theme.colors.border, paddingVertical: 12, color: theme.colors.primaryText },
   categoryContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 32 },
-  catChip: {
-    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10,
-    borderRadius: 20, borderWidth: 1.5
-  },
-  dateInfo: { alignItems: 'center', gap: 8, marginBottom: 40, alignSelf: 'center' },
-  saveButton: { height: 58, borderRadius: 18, justifyContent: 'center', alignItems: 'center', elevation: 4, shadowOpacity: 0.2, shadowRadius: 10 }
+  catChip: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20, borderWidth: 1.5 },
+  saveButton: { height: 58, borderRadius: 18, justifyContent: 'center', alignItems: 'center', elevation: 4, shadowOpacity: 0.2, shadowRadius: 10, marginBottom: 20 },
+  attachmentBtn: { flex: 1, height: 50, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.primary, borderStyle: 'dashed', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: `${theme.colors.primary}05` },
+  previewContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, backgroundColor: `${theme.colors.success}10`, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.success }
 });

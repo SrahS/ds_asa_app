@@ -35,20 +35,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        const firestoreData = userDoc.exists() ? userDoc.data() : null;
-
-        setUser({
-          ...currentUser,
-          displayName: currentUser.displayName || firestoreData?.name || null,
-          userData: firestoreData as any
-        });
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            setUser({ ...currentUser, ...userDoc.data() } as any);
+          } else {
+            setUser(currentUser as any);
+          }
+        } catch (err) {
+          console.log("Aguardando permissões do Firestore...");
+          setUser(currentUser as any);
+        }
       } else {
         setUser(null);
       }
       setLoading(false);
     });
-
     return unsubscribe;
   }, []);
 
