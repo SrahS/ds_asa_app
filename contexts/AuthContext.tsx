@@ -42,8 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           } else {
             setUser(currentUser as any);
           }
-        } catch (err) {
-          console.log("Aguardando permissões do Firestore...");
+        } catch {
           setUser(currentUser as any);
         }
       } else {

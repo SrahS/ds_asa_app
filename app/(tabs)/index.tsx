@@ -28,7 +28,6 @@ function formatCurrency(value: number): string {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-// ── Componente de card de métrica ──────────────────────────────────────────
 function MetricCard({
   label,
   value,
@@ -99,7 +98,6 @@ function MetricCard({
   );
 }
 
-// ── Componente de item de categoria ───────────────────────────────────────
 function CategoryItem({
   label,
   amount,
@@ -168,31 +166,22 @@ function CategoryItem({
   );
 }
 
-// ── Dashboard principal ────────────────────────────────────────────────────
 export default function DashboardScreen() {
   const { user } = useAuth();
   const { dashboardData, loading, refetch } = useTransactions();
   const [activeSection, setActiveSection] = useState<Section>("Resumo");
   const [refreshing, setRefreshing] = useState(false);
 
-  // Animação de transição entre seções
   const sectionAnim = useRef(new Animated.Value(0)).current;
   const prevSection = useRef<Section>("Resumo");
 
   const handleSeed = async () => {
     try {
       if (user?.uid) {
-        console.log("Tentando enviar para o UID:", user.uid);
         await seedUserData(user.uid);
-        alert("Injetado com sucesso!");
         refetch();
-      } else {
-        console.log("Usuário não identificado no clique");
       }
-    } catch (e: any) {
-      alert("ERRO NO FIREBASE: " + e.message);
-      console.log(e);
-    }
+    } catch { }
   };
 
   const switchSection = useCallback(
@@ -232,7 +221,6 @@ export default function DashboardScreen() {
   const { totalIncome, totalExpense, balance, monthlySummary, categoryExpenses } =
     dashboardData;
 
-  // Dados para o BarChart (receitas vs despesas)
   const barData = monthlySummary.flatMap((m) => [
     {
       value: m.income,
@@ -247,14 +235,12 @@ export default function DashboardScreen() {
     },
   ]);
 
-  // Dados para o LineChart (saldo)
   const lineData = monthlySummary.map((m) => ({
     value: m.balance,
     label: m.month,
     dataPointColor: theme.colors.primary,
   }));
 
-  // Dados para o PieChart (categorias)
   const pieData = categoryExpenses.map((c) => ({
     value: c.amount,
     color: c.color,
@@ -276,7 +262,6 @@ export default function DashboardScreen() {
     >
       <View style={{ paddingHorizontal: 24, paddingTop: 56 }}>
 
-        {/* Header */}
         <HStack style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
           <VStack style={{ gap: 2 }}>
             <Text style={{ fontSize: 13, color: theme.colors.secondaryText }}>
@@ -302,7 +287,6 @@ export default function DashboardScreen() {
           </View>
         </HStack>
 
-        {/* Cards de métrica */}
         <HStack style={{ gap: 10, marginBottom: 32 }}>
           <MetricCard label="Receitas" value={totalIncome} type="income" delay={0} />
           <MetricCard label="Despesas" value={totalExpense} type="expense" delay={100} />
@@ -311,7 +295,6 @@ export default function DashboardScreen() {
           <MetricCard label="Saldo atual" value={balance} type="balance" delay={200} />
         </View>
 
-        {/* Tabs de seção */}
         <View
           style={{
             flexDirection: "row",
@@ -359,10 +342,8 @@ export default function DashboardScreen() {
           ))}
         </View>
 
-        {/* Conteúdo animado das seções */}
         <Animated.View style={{ opacity: sectionOpacity }}>
 
-          {/* ── SEÇÃO: Resumo ── */}
           {activeSection === "Resumo" && (
             <VStack style={{ gap: 24 }}>
               <View
@@ -406,7 +387,6 @@ export default function DashboardScreen() {
             </VStack>
           )}
 
-          {/* ── SEÇÃO: Mensal ── */}
           {activeSection === "Mensal" && (
             <VStack style={{ gap: 24 }}>
               <View
@@ -494,7 +474,6 @@ export default function DashboardScreen() {
             </VStack>
           )}
 
-          {/* ── SEÇÃO: Categorias ── */}
           {activeSection === "Categorias" && (
             <VStack style={{ gap: 24 }}>
               {pieData.length > 0 && (
