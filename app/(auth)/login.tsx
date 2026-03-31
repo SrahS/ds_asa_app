@@ -1,3 +1,12 @@
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+  StyleSheet
+} from "react-native";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
@@ -6,16 +15,17 @@ import { HStack } from "@/components/ui/hstack";
 import { useAuth } from "@/contexts/AuthContext";
 import theme from "@/utils/theme";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react-native";
-import React, { useState } from "react";
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
 import { router } from "expo-router";
+import Svg, { Path, Circle } from 'react-native-svg';
+
+const LogoIcon = () => (
+  <Svg width={40} height={40} viewBox="0 0 46 46" fill="none">
+    <Path d="M8 35L17 21L24 29L32 16L39 24" stroke="white" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+    <Circle cx={17} cy={21} r={2.5} fill="white" />
+    <Circle cx={24} cy={29} r={2.5} fill={theme.colors.secondary} />
+    <Circle cx={32} cy={16} r={2.5} fill="white" />
+  </Svg>
+);
 
 export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
@@ -34,30 +44,14 @@ export default function LoginScreen() {
       setError("");
       setLoading(true);
       await signIn(email, password);
-      // Não precisa de router.replace aqui —
-      // o onAuthStateChanged dispara → _layout.tsx detecta user → redireciona
+
+      router.replace("/(tabs)");
+
     } catch (e: any) {
-      const messages: Record<string, string> = {
-        "auth/invalid-credential": "E-mail ou senha incorretos.",
-        "auth/user-not-found": "Usuário não encontrado.",
-        "auth/wrong-password": "Senha incorreta.",
-        "auth/too-many-requests": "Muitas tentativas. Tente mais tarde.",
-        "auth/network-request-failed": "Sem conexão com a internet.",
-      };
-      setError(messages[e.code] ?? "Erro ao entrar. Tente novamente.");
+      setError("E-mail ou senha incorretos.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const inputContainerStyle = {
-    borderRadius: 12,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.formsBackground,
-    height: 54,
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    overflow: "hidden" as const,
   };
 
   return (
@@ -65,218 +59,82 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        style={{ backgroundColor: theme.colors.background }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View
-          style={{
-            flex: 1,
-            paddingHorizontal: 28,
-            paddingTop: 96,
-            paddingBottom: 48,
-            maxWidth: 480,
-            width: "100%",
-            alignSelf: "center",
-          }}
-        >
-          {/* Logo */}
-          <View style={{ alignItems: "center", marginBottom: 56 }}>
-            <Image
-              source={require("@/assets/images/logo.png")}
-              style={{ width: 160, height: 56 }}
-              resizeMode="contain"
-            />
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+
+          <View style={styles.logoWrapper}>
+            <View style={styles.logoBox}>
+              <LogoIcon />
+            </View>
           </View>
 
-          {/* Título */}
-          <VStack space="sm" style={{ marginBottom: 40 }}>
-            <Text
-              bold
-              style={{
-                fontSize: 30,
-                color: theme.colors.primaryText,
-                letterSpacing: -0.5,
-              }}
-            >
-              Bem vindo de volta
+          <VStack style={styles.header}>
+            <Text bold style={styles.title}>
+              DS<Text style={{ color: theme.colors.primary }}> ASA</Text>
             </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                color: theme.colors.secondaryText,
-                lineHeight: 23,
-              }}
-            >
-              Entre com sua conta para continuar
-            </Text>
+            <Text style={styles.subtitle}>Gerencie suas finanças.</Text>
           </VStack>
 
-          {/* Campos */}
-          <VStack style={{ gap: 20, marginBottom: 8 }}>
+          <HStack style={{ gap: 10, marginBottom: 8, width: '100%' }}>
 
-            {/* E-mail */}
-            <VStack style={{ gap: 8 }}>
-              <Text size="sm" bold style={{ color: theme.colors.primaryText }}>
-                E-mail
-              </Text>
-              <Input variant="outline" size="lg" style={inputContainerStyle}>
-                <InputSlot style={{ paddingLeft: 16, height: "100%", justifyContent: "center" }}>
-                  <InputIcon
-                    as={Mail}
-                    style={{ color: theme.colors.secondaryText }}
-                    size={18}
-                  />
+            <VStack style={{ flex: 1, gap: 8 }}>
+              <Text size="xs" bold style={styles.label}>E-MAIL</Text>
+              <Input variant="outline" size="lg" style={styles.inputContainer}>
+                <InputSlot style={{ paddingLeft: 12, justifyContent: 'center', alignItems: 'center' }}>
+                  <InputIcon as={Mail} color={theme.colors.secondaryText} size="sm" />
                 </InputSlot>
                 <InputField
-                  placeholder="seu@email.com"
+                  placeholder="E-mail"
                   value={email}
                   onChangeText={setEmail}
-                  keyboardType="email-address"
                   autoCapitalize="none"
-                  autoCorrect={false}
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    fontSize: 15,
-                    color: theme.colors.primaryText,
-                    paddingHorizontal: 8,
-                  }}
+                  style={[styles.field, { paddingLeft: 4 }]}
                   placeholderTextColor={theme.colors.secondaryText}
                 />
               </Input>
             </VStack>
 
-            {/* Senha */}
-            <VStack style={{ gap: 8 }}>
-              <Text size="sm" bold style={{ color: theme.colors.primaryText }}>
-                Senha
-              </Text>
-              <Input variant="outline" size="lg" style={inputContainerStyle}>
-                <InputSlot style={{ paddingLeft: 16, height: "100%", justifyContent: "center" }}>
-                  <InputIcon
-                    as={Lock}
-                    style={{ color: theme.colors.secondaryText }}
-                    size={18}
-                  />
+            <VStack style={{ flex: 1, gap: 8 }}>
+              <Text size="xs" bold style={styles.label}>SENHA</Text>
+              <Input variant="outline" size="lg" style={styles.inputContainer}>
+                <InputSlot style={{ paddingLeft: 12, justifyContent: 'center', alignItems: 'center' }}>
+                  <InputIcon as={Lock} color={theme.colors.secondaryText} size="sm" />
                 </InputSlot>
                 <InputField
-                  placeholder="Sua senha"
+                  placeholder="Senha"
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={!showPassword}
-                  style={{
-                    flex: 1,
-                    height: "100%",
-                    fontSize: 15,
-                    color: theme.colors.primaryText,
-                    paddingHorizontal: 8,
-                  }}
+                  style={[styles.field, { paddingLeft: 4 }]}
                   placeholderTextColor={theme.colors.secondaryText}
                 />
-                <InputSlot
-                  style={{ paddingRight: 16, height: "100%", justifyContent: "center" }}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <InputIcon
-                    as={showPassword ? EyeOff : Eye}
-                    style={{ color: theme.colors.secondaryText }}
-                    size={18}
-                  />
+                <InputSlot style={{ paddingRight: 12 }} onPress={() => setShowPassword(!showPassword)}>
+                  <InputIcon as={showPassword ? EyeOff : Eye} color={theme.colors.secondaryText} size="sm" />
                 </InputSlot>
               </Input>
             </VStack>
-          </VStack>
 
-          {/* Botão principal */}
-          <Button
-            onPress={handleLogin}
-            disabled={loading}
-            style={{
-              backgroundColor: theme.colors.primary,
-              borderRadius: 14,
-              height: 56,
-              marginTop: 32,
-              justifyContent: "center",
-              alignItems: "center",
-              opacity: loading ? 0.8 : 1,
-            }}
-          >
+          </HStack>
+
+          <Button onPress={handleLogin} disabled={loading} style={styles.loginButton}>
             {loading ? (
               <ButtonSpinner color="white" />
             ) : (
-              <ButtonText
-                bold
-                style={{ color: "#FFFFFF", fontSize: 16, letterSpacing: 0.4, textAlign: "center" }}
-              >
-                Entrar
-              </ButtonText>
+              <ButtonText bold style={styles.buttonText}>Entrar</ButtonText>
             )}
           </Button>
 
-          {error !== "" && (
-            <View
-              style={{
-                marginTop: 12,
-                backgroundColor: `${theme.colors.error}12`,
-                borderRadius: 10,
-                paddingHorizontal: 14,
-                paddingVertical: 10,
-                borderWidth: 1,
-                borderColor: `${theme.colors.error}30`,
-              }}
-            >
-              <Text size="sm" style={{ color: theme.colors.error, textAlign: "center" }}>
-                {error}
-              </Text>
-            </View>
-          )}
+          {error !== "" && <Text size="sm" style={styles.errorText}>{error}</Text>}
 
-          {/* Esqueceu a senha */}
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Pressable hitSlop={8}>
-              <Text
-                size="sm"
-                style={{ color: theme.colors.primary }}
-                onPress={() => router.push("/(auth)/forgot-password")}
-              >
-                Esqueceu a senha?
-              </Text>
-            </Pressable>
-          </View>
+          <Pressable style={styles.forgotPass} onPress={() => router.push("/(auth)/forgot-password")}>
+            <Text size="sm" bold style={{ color: theme.colors.primary }}>Esqueceu sua senha?</Text>
+          </Pressable>
 
-          {/* Divisor */}
-          <HStack
-            style={{
-              alignItems: "center",
-              marginTop: 32,
-              marginBottom: 32,
-              gap: 12,
-            }}
-          >
-            <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.border }} />
-            <Text size="sm" style={{ color: theme.colors.secondaryText }}>
-              ou
-            </Text>
-            <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.border }} />
-          </HStack>
-
-          {/* Rodapé */}
-          <View style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}>
-            <HStack style={{ alignItems: "center", gap: 4 }}>
-              <Text size="sm" style={{ color: theme.colors.secondaryText }}>
-                Não possui uma conta?
-              </Text>
-              <Pressable hitSlop={8}>
-                <Text
-                  size="sm"
-                  bold
-                  style={{ color: theme.colors.primary }}
-                  onPress={() => router.push("/(auth)/register")}>
-                  Cadastre-se
-                </Text>
+          <View style={styles.footer}>
+            <HStack style={{ gap: 4 }}>
+              <Text size="sm" style={{ color: theme.colors.secondaryText }}>Novo por aqui?</Text>
+              <Pressable onPress={() => router.push("/(auth)/register")}>
+                <Text size="sm" bold style={{ color: theme.colors.primary }}>Crie uma conta</Text>
               </Pressable>
             </HStack>
           </View>
@@ -286,3 +144,37 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, paddingHorizontal: 20, paddingTop: 60, paddingBottom: 40 },
+  logoWrapper: { alignItems: "center", marginBottom: 32 },
+  logoBox: {
+    width: 64, height: 64, borderRadius: 18,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center', justifyContent: 'center',
+    elevation: 8, shadowColor: theme.colors.primary,
+    shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.2, shadowRadius: 10
+  },
+  header: { marginBottom: 36, alignItems: 'center' },
+  title: { fontSize: 32, color: theme.colors.primaryText, fontWeight: '900', letterSpacing: -1 },
+  subtitle: { fontSize: 14, color: theme.colors.secondaryText, marginTop: 4, textAlign: 'center' },
+  label: { color: theme.colors.secondaryText, marginLeft: 4, letterSpacing: 1 },
+  inputContainer: {
+    borderRadius: 16, borderColor: theme.colors.border,
+    backgroundColor: theme.colors.formsBackground, height: 58,
+    flexDirection: 'row', alignItems: 'center',
+  },
+  field: {
+    flex: 1,
+    color: theme.colors.primaryText,
+    fontSize: 14,
+  },
+  loginButton: {
+    backgroundColor: theme.colors.primary, borderRadius: 16,
+    height: 58, marginTop: 32, justifyContent: 'center', alignItems: 'center',
+  },
+  buttonText: { color: "#FFFFFF", fontSize: 16, textAlign: 'center' },
+  errorText: { color: theme.colors.error, textAlign: "center", marginTop: 16, fontWeight: '600' },
+  forgotPass: { marginTop: 24, alignItems: 'center' },
+  footer: { flex: 1, justifyContent: 'flex-end', marginTop: 40, alignItems: 'center' }
+});

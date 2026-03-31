@@ -4,12 +4,22 @@ import {
   signInWithEmailAndPassword,
   signOut,
   User,
+  updateProfile
 } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebaseConfig";
+
+export interface AppUser extends User {
+  userData?: {
+    name: string;
+    email: string;
+    createdAt: string;
+  }
+}
+
 interface AuthContextData {
-  user: User | null;
+  user: AppUser | null;
   loading: boolean;
   signIn: (email: string, pass: string) => Promise<void>;
   signUp: (email: string, pass: string, name: string) => Promise<void>;
@@ -19,39 +29,51 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Listener em tempo real — atualiza user automaticamente
-    // ao logar, deslogar ou reabrir o app
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        const firestoreData = userDoc.exists() ? userDoc.data() : null;
+
+        setUser({
+          ...currentUser,
+          displayName: currentUser.displayName || firestoreData?.name || null,
+          userData: firestoreData as any
+        });
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
-    return unsubscribe; // limpa o listener ao desmontar
+    return unsubscribe;
   }, []);
 
   const signIn = async (email: string, pass: string) => {
-    // O primeiro parâmetro TEM QUE SER o 'auth'
     await signInWithEmailAndPassword(auth, email, pass);
   };
 
   const signUp = async (email: string, pass: string, name: string) => {
     try {
-      // 1. Cria o user no Auth (Passando o 'auth' como 1º argumento)
       const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-      const user = userCredential.user;
+      const newUser = userCredential.user;
 
-      // 2. Salva o nome no Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        email: email,
+      await updateProfile(newUser, { displayName: name });
+
+      const userData = {
+        name,
+        email,
         createdAt: new Date().toISOString(),
-      });
+      };
+      await setDoc(doc(db, "users", newUser.uid), userData);
+
+      setUser({ ...newUser, displayName: name, userData });
+
     } catch (error) {
-      throw error; // Rebola o erro para a tela de Register tratar
+      throw error;
     }
   };
 

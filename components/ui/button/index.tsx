@@ -10,11 +10,8 @@ import {
 import { cssInterop } from 'nativewind';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { PrimitiveIcon, UIIcon } from '@gluestack-ui/core/icon/creator';
-
 const SCOPE = 'BUTTON';
-
 const Root = withStyleContext(Pressable, SCOPE);
-
 const UIButton = createButton({
   Root: Root,
   Text,
@@ -22,7 +19,6 @@ const UIButton = createButton({
   Spinner: ActivityIndicator,
   Icon: UIIcon,
 });
-
 cssInterop(PrimitiveIcon, {
   className: {
     target: 'style',
@@ -35,7 +31,6 @@ cssInterop(PrimitiveIcon, {
     },
   },
 });
-
 const buttonStyle = tva({
   base: 'group/button rounded bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2',
   variants: {
@@ -57,7 +52,6 @@ const buttonStyle = tva({
         'bg-transparent border data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent',
       solid: '',
     },
-
     size: {
       xs: 'px-3.5 h-8',
       sm: 'px-4 h-9',
@@ -117,7 +111,6 @@ const buttonStyle = tva({
     },
   ],
 });
-
 const buttonTextStyle = tva({
   base: 'text-typography-0 font-semibold web:select-none',
   parentVariants: {
@@ -196,7 +189,6 @@ const buttonTextStyle = tva({
     },
   ],
 });
-
 const buttonIconStyle = tva({
   base: 'fill-none',
   parentVariants: {
@@ -220,7 +212,6 @@ const buttonIconStyle = tva({
         'text-typography-500 data-[hover=true]:text-typography-600 data-[active=true]:text-typography-700',
       positive:
         'text-success-600 data-[hover=true]:text-success-600 data-[active=true]:text-success-700',
-
       negative:
         'text-error-600 data-[hover=true]:text-error-600 data-[active=true]:text-error-700',
     },
@@ -252,7 +243,6 @@ const buttonIconStyle = tva({
     },
   ],
 });
-
 const buttonGroupStyle = tva({
   base: '',
   variants: {
@@ -277,13 +267,11 @@ const buttonGroupStyle = tva({
     },
   },
 });
-
 type IButtonProps = Omit<
   React.ComponentPropsWithoutRef<typeof UIButton>,
   'context'
 > &
   VariantProps<typeof buttonStyle> & { className?: string };
-
 const Button = React.forwardRef<
   React.ElementRef<typeof UIButton>,
   IButtonProps
@@ -302,10 +290,8 @@ const Button = React.forwardRef<
     );
   }
 );
-
 type IButtonTextProps = React.ComponentPropsWithoutRef<typeof UIButton.Text> &
   VariantProps<typeof buttonTextStyle> & { className?: string };
-
 const ButtonText = React.forwardRef<
   React.ElementRef<typeof UIButton.Text>,
   IButtonTextProps
@@ -315,7 +301,6 @@ const ButtonText = React.forwardRef<
     size: parentSize,
     action: parentAction,
   } = useStyleContext(SCOPE);
-
   return (
     <UIButton.Text
       ref={ref}
@@ -334,9 +319,7 @@ const ButtonText = React.forwardRef<
     />
   );
 });
-
 const ButtonSpinner = UIButton.Spinner;
-
 type IButtonIcon = React.ComponentPropsWithoutRef<typeof UIButton.Icon> &
   VariantProps<typeof buttonIconStyle> & {
     className?: string | undefined;
@@ -344,7 +327,6 @@ type IButtonIcon = React.ComponentPropsWithoutRef<typeof UIButton.Icon> &
     height?: number;
     width?: number;
   };
-
 const ButtonIcon = React.forwardRef<
   React.ElementRef<typeof UIButton.Icon>,
   IButtonIcon
@@ -354,7 +336,6 @@ const ButtonIcon = React.forwardRef<
     size: parentSize,
     action: parentAction,
   } = useStyleContext(SCOPE);
-
   if (typeof size === 'number') {
     return (
       <UIButton.Icon
@@ -392,10 +373,8 @@ const ButtonIcon = React.forwardRef<
     />
   );
 });
-
 type IButtonGroupProps = React.ComponentPropsWithoutRef<typeof UIButton.Group> &
   VariantProps<typeof buttonGroupStyle>;
-
 const ButtonGroup = React.forwardRef<
   React.ElementRef<typeof UIButton.Group>,
   IButtonGroupProps
@@ -424,11 +403,9 @@ const ButtonGroup = React.forwardRef<
     );
   }
 );
-
 Button.displayName = 'Button';
 ButtonText.displayName = 'ButtonText';
 ButtonSpinner.displayName = 'ButtonSpinner';
 ButtonIcon.displayName = 'ButtonIcon';
 ButtonGroup.displayName = 'ButtonGroup';
-
 export { Button, ButtonText, ButtonSpinner, ButtonIcon, ButtonGroup };

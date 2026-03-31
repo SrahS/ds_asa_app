@@ -3,19 +3,16 @@ import { H1, H2, H3, H4, H5, H6 } from '@expo/html-elements';
 import { headingStyle } from './styles';
 import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
-
 type IHeadingProps = VariantProps<typeof headingStyle> &
   React.ComponentPropsWithoutRef<typeof H1> & {
     as?: React.ElementType;
   };
-
 cssInterop(H1, { className: 'style' });
 cssInterop(H2, { className: 'style' });
 cssInterop(H3, { className: 'style' });
 cssInterop(H4, { className: 'style' });
 cssInterop(H5, { className: 'style' });
 cssInterop(H6, { className: 'style' });
-
 const MappedHeading = memo(
   forwardRef<React.ComponentRef<typeof H1>, IHeadingProps>(
     function MappedHeading(
@@ -51,7 +48,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -70,7 +66,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -89,7 +84,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -108,7 +102,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -127,7 +120,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -147,7 +139,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -166,7 +157,6 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error : type issue
               ref={ref}
             />
           );
@@ -174,7 +164,6 @@ const MappedHeading = memo(
     }
   )
 );
-
 const Heading = memo(
   forwardRef<React.ComponentRef<typeof H1>, IHeadingProps>(function Heading(
     { className, size = 'lg', as: AsComp, ...props },
@@ -189,7 +178,6 @@ const Heading = memo(
       italic,
       highlight,
     } = props;
-
     if (AsComp) {
       return (
         <AsComp
@@ -208,13 +196,10 @@ const Heading = memo(
         />
       );
     }
-
     return (
       <MappedHeading className={className} size={size} ref={ref} {...props} />
     );
   })
 );
-
 Heading.displayName = 'Heading';
-
 export { Heading };

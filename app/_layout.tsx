@@ -11,18 +11,15 @@ function RootLayoutNav() {
   const { user, loading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-
   useEffect(() => {
     if (loading) return;
     const inAuthGroup = segments[0] === "(auth)";
-
     if (!user && !inAuthGroup) {
       router.replace("/(auth)/login");
     } else if (user && inAuthGroup) {
       router.replace("/(tabs)");
     }
   }, [user, loading, segments]);
-
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.background }}>
@@ -30,7 +27,6 @@ function RootLayoutNav() {
       </View>
     );
   }
-
   return <Slot />;
 }
 

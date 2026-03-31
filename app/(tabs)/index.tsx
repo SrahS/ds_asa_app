@@ -180,9 +180,18 @@ export default function DashboardScreen() {
   const prevSection = useRef<Section>("Resumo");
 
   const handleSeed = async () => {
-    if (user?.uid) {
-      await seedUserData(user.uid);
-      refetch();
+    try {
+      if (user?.uid) {
+        console.log("Tentando enviar para o UID:", user.uid);
+        await seedUserData(user.uid);
+        alert("Injetado com sucesso!");
+        refetch();
+      } else {
+        console.log("Usuário não identificado no clique");
+      }
+    } catch (e: any) {
+      alert("ERRO NO FIREBASE: " + e.message);
+      console.log(e);
     }
   };
 
@@ -271,10 +280,10 @@ export default function DashboardScreen() {
         <HStack style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
           <VStack style={{ gap: 2 }}>
             <Text style={{ fontSize: 13, color: theme.colors.secondaryText }}>
-              Olá, {user?.displayName?.split(" ")[0] ?? "usuário"}
+              Olá,
             </Text>
             <Text bold style={{ fontSize: 22, color: theme.colors.primaryText, letterSpacing: -0.5 }}>
-              Dashboard
+              {user?.displayName?.split(" ")[0]}
             </Text>
           </VStack>
           <View
@@ -555,9 +564,9 @@ export default function DashboardScreen() {
 
         </Animated.View>
       </View>
-      {/* <Pressable onPress={handleSeed} style={{ padding: 10, backgroundColor: 'blue' }}>
-        <Text style={{ color: 'white' }}>GERAR DADOS DE TESTE (BRL)</Text>
-      </Pressable> */}
+      <Pressable onPress={handleSeed} style={{ padding: 10, backgroundColor: 'blue' }}>
+        <Text style={{ color: 'white' }}>GERAR DADOS DE TESTE</Text>
+      </Pressable>
     </ScrollView>
   );
 }

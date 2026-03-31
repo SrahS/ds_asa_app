@@ -1,4 +1,4 @@
-// app/forgot-password.tsx
+
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
@@ -24,10 +24,10 @@ export default function ForgotPasswordScreen() {
   const handleSend = async () => {
     try {
       setLoading(true);
-      // await sendPasswordReset(email);
+
       setSent(true);
     } catch (error) {
-      // tratado no contexto
+
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,6 @@ export default function ForgotPasswordScreen() {
             alignSelf: "center",
           }}
         >
-          {/* Voltar */}
           <Pressable
             onPress={() => router.back()}
             hitSlop={8}
@@ -80,7 +79,7 @@ export default function ForgotPasswordScreen() {
           </Pressable>
 
           {sent ? (
-            /* ── Estado: e-mail enviado ── */
+
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 16 }}>
               <View
                 style={{
@@ -141,7 +140,7 @@ export default function ForgotPasswordScreen() {
               </Button>
             </View>
           ) : (
-            /* ── Estado: formulário ── */
+
             <>
               <VStack space="sm" style={{ marginBottom: 40 }}>
                 <Text

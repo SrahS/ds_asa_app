@@ -11,14 +11,11 @@ export async function uploadReceipt(
     const storagePath = `receipts/${userId}/${transactionId}.${ext}`;
     const storageRef = ref(storage, storagePath);
 
-    // No Expo Go, precisamos converter a URI para Blob
     const response = await fetch(localUri);
     const blob = await response.blob();
 
-    // Faz o upload
     await uploadBytes(storageRef, blob);
 
-    // Pega a URL pública
     return await getDownloadURL(storageRef);
   } catch (error) {
     console.error("Erro no upload do recibo:", error);

@@ -1,4 +1,3 @@
-// app/register.tsx
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
@@ -17,7 +16,6 @@ import {
   View,
 } from "react-native";
 import { useAuth } from "@/contexts/AuthContext";
-
 export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -28,10 +26,8 @@ export default function RegisterScreen() {
   const [showConfirm, setShowConfirm] = useState(false);
   const router = useRouter();
   const { signUp } = useAuth();
-
   const passwordMatch = confirmPassword === "" || password === confirmPassword;
   const isValid = name && email && password && confirmPassword && passwordMatch;
-
   const handleRegister = async () => {
     try {
       setLoading(true);
@@ -42,7 +38,6 @@ export default function RegisterScreen() {
       setLoading(false);
     }
   };
-
   const inputContainerStyle = {
     borderRadius: 12,
     borderColor: theme.colors.border,
@@ -52,13 +47,11 @@ export default function RegisterScreen() {
     alignItems: "center" as const,
     overflow: "hidden" as const,
   };
-
   const inputErrorStyle = {
     ...inputContainerStyle,
     borderColor: theme.colors.error,
     backgroundColor: `${theme.colors.error}08`,
   };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -81,7 +74,6 @@ export default function RegisterScreen() {
             alignSelf: "center",
           }}
         >
-          {/* Voltar */}
           <Pressable
             onPress={() => router.back()}
             hitSlop={8}
@@ -94,8 +86,7 @@ export default function RegisterScreen() {
               </Text>
             </View>
           </Pressable>
-
-          {/* Título */}
+          { }
           <VStack space="sm" style={{ marginBottom: 40 }}>
             <Text
               bold
@@ -117,11 +108,9 @@ export default function RegisterScreen() {
               Preencha os campos abaixo para se cadastrar.
             </Text>
           </VStack>
-
-          {/* Campos */}
+          { }
           <VStack style={{ gap: 20 }}>
-
-            {/* Nome */}
+            { }
             <VStack style={{ gap: 8 }}>
               <Text size="sm" bold style={{ color: theme.colors.primaryText }}>
                 Nome completo
@@ -151,8 +140,7 @@ export default function RegisterScreen() {
                 />
               </Input>
             </VStack>
-
-            {/* E-mail */}
+            { }
             <VStack style={{ gap: 8 }}>
               <Text size="sm" bold style={{ color: theme.colors.primaryText }}>
                 E-mail
@@ -183,8 +171,7 @@ export default function RegisterScreen() {
                 />
               </Input>
             </VStack>
-
-            {/* Senha */}
+            { }
             <VStack style={{ gap: 8 }}>
               <Text size="sm" bold style={{ color: theme.colors.primaryText }}>
                 Senha
@@ -223,8 +210,7 @@ export default function RegisterScreen() {
                 </InputSlot>
               </Input>
             </VStack>
-
-            {/* Confirmar senha */}
+            { }
             <VStack style={{ gap: 8 }}>
               <Text size="sm" bold style={{ color: theme.colors.primaryText }}>
                 Confirmar senha
@@ -284,8 +270,7 @@ export default function RegisterScreen() {
               )}
             </VStack>
           </VStack>
-
-          {/* Botão */}
+          { }
           <Button
             onPress={handleRegister}
             disabled={loading || !isValid}
@@ -310,8 +295,7 @@ export default function RegisterScreen() {
               </ButtonText>
             )}
           </Button>
-
-          {/* Rodapé */}
+          { }
           <View style={{ flex: 1, justifyContent: "flex-end", alignItems: "center", marginTop: 32 }}>
             <HStack style={{ alignItems: "center", gap: 4 }}>
               <Text size="sm" style={{ color: theme.colors.secondaryText }}>
@@ -324,7 +308,6 @@ export default function RegisterScreen() {
               </Pressable>
             </HStack>
           </View>
-
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

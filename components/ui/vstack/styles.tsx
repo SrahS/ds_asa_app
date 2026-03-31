@@ -1,8 +1,6 @@
 import { tva } from '@gluestack-ui/nativewind-utils/tva';
-
 export const vstackStyle = tva({
   base: 'flex-col',
-
   variants: {
     space: {
       xs: 'gap-1',
@@ -13,7 +11,6 @@ export const vstackStyle = tva({
       '2xl': 'gap-10',
       '3xl': 'gap-12',
     },
-
     reversed: {
       true: 'flex-col-reverse',
     },

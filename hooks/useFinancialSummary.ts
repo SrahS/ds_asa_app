@@ -17,7 +17,6 @@ export function useFinancialSummary() {
       totalBalance: income - expense,
       income,
       expense,
-      // Dados formatados para o gráfico de pizza (Donut)
       chartData: [
         { value: income, color: "#22c55e", text: "Entradas" },
         { value: expense, color: "#ef4444", text: "Saídas" },
