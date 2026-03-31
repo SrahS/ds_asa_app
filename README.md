@@ -1,69 +1,74 @@
-# Para começar:
+🏦 DS_ASA_APP — Gestão Financeira Inteligente
+Projeto desenvolvido como desafio prático para a Pós-Graduação em Front-end Engineering na FIAP, focado em Mobile Development com React Native e Cloud Integration. A aplicação oferece um controle de gastos refinado, utilizando o que há de mais moderno no ecossistema Expo e Firebase.
 
-1. Install dependencies
+✨ Funcionalidades Principais
+🔐 Autenticação Segura: Fluxo completo de Login e Cadastro via Firebase Auth, com persistência de estado e proteção de rotas.
 
-   ```bash
-   npm install
-   ```
+📊 Dashboard Estratégico: Visão geral de saldo, receitas e despesas com análise de dados em tempo real.
 
-2. Start the app
+💸 Gestão de Transações: CRUD completo (Criar, Ler, Atualizar e Excluir) com tipagem forte para categorias e tipos.
 
-   ```bash
-   npx expo start
-   ```
+📜 Extrato Organizado: Listagem de atividades agrupada por data, com Scroll Infinito e paginação otimizada via Firestore.
 
-# Arquitetura do Projeto
+📸 Comprovantes na Nuvem: Sistema de anexos para fotos de recibos (Câmera/Galeria) utilizando Firebase Storage.
 
-# src/
+🔍 Filtros Dinâmicos: Busca textual e filtros rápidos por Categoria, Tipo e Período.
 
-# ├── app/ # Expo Router (Navegação baseada em arquivos)
+🚀 Tecnologias e Stack Técnica
+Framework: Expo (SDK 50+) com Expo Router (File-based routing).
 
-# ├── components/ # UI Kit (Botões, Inputs seguindo o estilo shadcn)
+Linguagem: TypeScript (Tipagem estrita para segurança de dados).
 
-# ├── contexts/ # AuthContext e TransactionContext
+UI & Design: Baseado no estilo Shadcn/ui, utilizando Gluestack UI v2 + NativeWind v4.
 
-# ├── hooks/ # Custom hooks para Firebase/Firestore
+Estilização: Tailwind CSS para um layout responsivo e moderno.
 
-# ├── services/ # Configuração do Firebase
+Backend as a Service: Firebase (Firestore Database & Auth).
 
-# ├── utils/ # Formatadores de moeda e data
+Cloud Storage: Google Cloud Storage (com configuração de CORS para uploads mobile).
 
-# └── types/ # Interfaces TypeScript
+Formulários: React Hook Form + Zod para validações robustas.
 
-# 🏦 DS_ASA_APP - Gerenciador Financeiro Pessoal
-
-Projeto desenvolvido como desafio prático para o curso de Pós-Graduação, focado em **Mobile Development** com **React Native** e **Cloud Integration**. A aplicação permite o controle total de transações financeiras com autenticação segura e armazenamento em nuvem.
-
-## 🚀 Tecnologias Utilizadas
-
-- **Framework:** [Expo](https://expo.dev/) (React Native)
-- **Linguagem:** TypeScript
-- **UI System:** Shadcn/ui (via Gluestack UI v2 + NativeWind)
-- **Estilização:** Tailwind CSS (NativeWind v4)
-- **Banco de Dados & Auth:** Firebase (Firestore & Auth)
-- **Storage:** Firebase Storage (para recibos)
-- **Validação:** Zod + React Hook Form
-- **Navegação:** Expo Router (File-based routing)
-
-## ✨ Funcionalidades
-
-- [x] **Autenticação:** Login e Cadastro via Firebase Auth.
-- [x] **Dashboard:** Visão geral com gráficos financeiros e análise de saldo.
-- [x] **Transações:** Listagem com **Scroll Infinito** e paginação via Firestore.
-- [x] **Gestão de Dados:** Adição, edição e exclusão de transações.
-- [x] **Anexos:** Upload de fotos de recibos diretamente da câmera ou galeria.
-- [x] **Filtros Avançados:** Busca por categoria, data e tipo (Entrada/Saída).
-
-## 📂 Estrutura de Pastas
-
-```text
+📂 Estrutura de Pastas (Arquitetura)
+Plaintext
 src/
-├── app/             # Rotas e Navegação (Expo Router)
-├── components/      # UI Kit (Botões, Cards, Inputs estilo Shadcn)
-├── contexts/        # Gerenciamento de Estado Global (Auth/Transactions)
-├── hooks/           # Lógica de negócio e chamadas ao Firebase
-├── schemas/         # Validações de formulários com Zod
-├── services/        # Configurações do Firebase e APIs
-├── types/           # Definições de interfaces TypeScript
-└── utils/           # Formatadores de moeda e data
-```
+├── app/             # Rotas e Navegação (Tab Bar, Auth, Modais)
+├── components/      # UI Kit (Botões, Cards, Inputs, Listas estilo Shadcn)
+├── contexts/        # Gerenciamento de Estado (AuthContext e UI State)
+├── hooks/           # Lógica de negócio (useTransactions, useUploadReceipt)
+├── schemas/         # Esquemas de validação (Zod)
+├── services/        # Configuração do Firebase e chamadas de API
+├── types/           # Interfaces e Enums (Transaction, User)
+└── utils/           # Formatadores (BRL, Datas) e Helpers de tema
+🛠️ Como Iniciar o Projeto
+1. Pré-requisitos
+Certifique-se de ter o Node.js e o Expo Go instalados.
+
+2. Instalação
+Bash
+# Clone o repositório e instale as dependências
+npm install
+3. Configuração do Firebase
+Crie um arquivo em src/services/firebaseConfig.ts e adicione suas credenciais:
+
+TypeScript
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  projectId: "dsa-app-21d17",
+  storageBucket: "dsa-app-receipts-sarah", // Nome do seu bucket no Google Cloud
+  // ... outras chaves
+};
+4. Execução
+Bash
+# Inicie o servidor do Expo
+npx expo start
+Dica: Pressione s para abrir no simulador ou escaneie o QR Code com o app Expo Go.
+
+🛡️ Configuração de Segurança (CORS)
+Para que o upload de recibos funcione corretamente no ambiente mobile, o bucket do Google Cloud deve estar configurado:
+
+Bash
+gsutil cors set cors.json gs://dsa-app-receipts-sarah
+<p align="center">
+Desenvolvido por <strong>Sarah Silva</strong> 🚀
+</p>
