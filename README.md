@@ -1,4 +1,4 @@
-🏦 DS_ASA_APP — Gestão Financeira Inteligente
+DS ASA APP — Gestão Financeira Inteligente
 Projeto desenvolvido como desafio prático para a Pós-Graduação em Front-end Engineering Mobile Development com React Native e Cloud Integration. A aplicação oferece um controle de gastos refinado, utilizando o que há de mais moderno no ecossistema Expo e Firebase.
 
 # Funcionalidades Principais
