@@ -1,36 +1,37 @@
 🏦 DS_ASA_APP — Gestão Financeira Inteligente
-Projeto desenvolvido como desafio prático para a Pós-Graduação em Front-end Engineering na FIAP, focado em Mobile Development com React Native e Cloud Integration. A aplicação oferece um controle de gastos refinado, utilizando o que há de mais moderno no ecossistema Expo e Firebase.
+Projeto desenvolvido como desafio prático para a Pós-Graduação em Front-end Engineering Mobile Development com React Native e Cloud Integration. A aplicação oferece um controle de gastos refinado, utilizando o que há de mais moderno no ecossistema Expo e Firebase.
 
-✨ Funcionalidades Principais
-🔐 Autenticação Segura: Fluxo completo de Login e Cadastro via Firebase Auth, com persistência de estado e proteção de rotas.
+# Funcionalidades Principais
+- Autenticação Segura: Fluxo completo de Login e Cadastro via Firebase Auth, com persistência de estado e proteção de rotas.
 
-📊 Dashboard Estratégico: Visão geral de saldo, receitas e despesas com análise de dados em tempo real.
+- Dashboard Estratégico: Visão geral de saldo, receitas e despesas com análise de dados em tempo real.
 
-💸 Gestão de Transações: CRUD completo (Criar, Ler, Atualizar e Excluir) com tipagem forte para categorias e tipos.
+- Gestão de Transações: CRUD completo (Criar, Ler, Atualizar e Excluir) com tipagem forte para categorias e tipos.
 
-📜 Extrato Organizado: Listagem de atividades agrupada por data, com Scroll Infinito e paginação otimizada via Firestore.
+- Extrato Organizado: Listagem de atividades agrupada por data, com Scroll Infinito e paginação otimizada via Firestore.
 
-📸 Comprovantes na Nuvem: Sistema de anexos para fotos de recibos (Câmera/Galeria) utilizando Firebase Storage.
+- Comprovantes na Nuvem: Sistema de anexos para fotos de recibos (Câmera/Galeria) utilizando Firebase Storage.
 
-🔍 Filtros Dinâmicos: Busca textual e filtros rápidos por Categoria, Tipo e Período.
+- Filtros Dinâmicos: Busca textual e filtros rápidos por Categoria, Tipo e Período.
 
-🚀 Tecnologias e Stack Técnica
-Framework: Expo (SDK 50+) com Expo Router (File-based routing).
+# Tecnologias e Stack Técnica
 
-Linguagem: TypeScript (Tipagem estrita para segurança de dados).
+- Framework: Expo (SDK 50+) com Expo Router (File-based routing).
 
-UI & Design: Baseado no estilo Shadcn/ui, utilizando Gluestack UI v2 + NativeWind v4.
+- Linguagem: TypeScript (Tipagem estrita para segurança de dados).
 
-Estilização: Tailwind CSS para um layout responsivo e moderno.
+- UI & Design: Baseado no estilo Shadcn/ui, utilizando Gluestack UI v2 + NativeWind v4.
 
-Backend as a Service: Firebase (Firestore Database & Auth).
+- Estilização: Tailwind CSS para um layout responsivo e moderno.
 
-Cloud Storage: Google Cloud Storage (com configuração de CORS para uploads mobile).
+- Backend as a Service: Firebase (Firestore Database & Auth).
 
-Formulários: React Hook Form + Zod para validações robustas.
+- Cloud Storage: Google Cloud Storage (com configuração de CORS para uploads mobile).
 
-📂 Estrutura de Pastas (Arquitetura)
-Plaintext
+- Formulários: React Hook Form + Zod para validações robustas.
+
+# Arquitetura
+
 src/
 ├── app/             # Rotas e Navegação (Tab Bar, Auth, Modais)
 ├── components/      # UI Kit (Botões, Cards, Inputs, Listas estilo Shadcn)
@@ -40,35 +41,36 @@ src/
 ├── services/        # Configuração do Firebase e chamadas de API
 ├── types/           # Interfaces e Enums (Transaction, User)
 └── utils/           # Formatadores (BRL, Datas) e Helpers de tema
-🛠️ Como Iniciar o Projeto
+
+
+# Como Iniciar o Projeto
 1. Pré-requisitos
-Certifique-se de ter o Node.js e o Expo Go instalados.
+  Certifique-se de ter o Node.js e o Expo Go instalados.
 
 2. Instalação
-Bash
-# Clone o repositório e instale as dependências
-npm install
+  Clone o repositório e instale as dependências
+  npm install
+
 3. Configuração do Firebase
-Crie um arquivo em src/services/firebaseConfig.ts e adicione suas credenciais:
+  Em src/services/firebaseConfig.ts - adicione suas credenciais:
 
 TypeScript
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
+  apiKey: "",
   projectId: "dsa-app-21d17",
-  storageBucket: "dsa-app-receipts-sarah", // Nome do seu bucket no Google Cloud
-  // ... outras chaves
+  storageBucket: "", 
 };
+
 4. Execução
-Bash
-# Inicie o servidor do Expo
-npx expo start
-Dica: Pressione s para abrir no simulador ou escaneie o QR Code com o app Expo Go.
+  Inicie o servidor do Expo
+  npx expo start
+  Dica: Pressione s para abrir no simulador ou escaneie o QR Code com o app Expo Go.
 
-🛡️ Configuração de Segurança (CORS)
-Para que o upload de recibos funcione corretamente no ambiente mobile, o bucket do Google Cloud deve estar configurado:
+# Configuração de Segurança (CORS)
+  Para que o upload de recibos funcione corretamente no ambiente mobile, o bucket do Google Cloud deve estar configurado:
 
-Bash
-gsutil cors set cors.json gs://dsa-app-receipts-sarah
+ ex: gsutil cors set cors.json gs://dsa-app-receipts-sarah
+  
 <p align="center">
 Desenvolvido por <strong>Sarah Silva</strong> 🚀
 </p>
